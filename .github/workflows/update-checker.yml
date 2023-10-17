@@ -12,24 +12,19 @@
 name: Update Checker
 
 env:
-  REPO_URL: git@github.com:WYC-2020/lede.git
+  REPO_URL: https://github.com/coolsnowwolf/lede
   REPO_BRANCH: master
 
 on:
   workflow_dispatch:
 #  schedule:
-#    - cron: 0 0 * * SAT
+#    - cron: 0 */18 * * *
 
 jobs:
   check:
     runs-on: ubuntu-latest
 
     steps:
-
-    - name: Set ssh agent
-      uses: webfactory/ssh-agent@v0.5.4
-      with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
     - name: Get Commit Hash
       id: getHash
