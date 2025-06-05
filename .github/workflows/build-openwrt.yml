@@ -24,14 +24,10 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: 释放磁盘空间
-      uses: jlumbroso/free-disk-space@main
+    - name: Free disk space
+      uses: jlumbroso/free-disk-space@v1.0.1
       with:
-        # this might remove tools that are actually needed,
-        # if set to "true" but frees about 6 GB
         tool-cache: true
-        # all of these default to true, but feel free to set to
-        # "false" if necessary for your workflow
         android: true
         dotnet: true
         haskell: true
@@ -133,8 +129,6 @@ jobs:
       run: |
         echo "release_tag=$(date +"%Y.%m.%d-%H%M")" >> $GITHUB_OUTPUT
         touch release.txt
-        # Note: UPLOAD_GOFILE reference below may cause errors if not defined
-        [ ${UPLOAD_GOFILE} = true && ${{ steps.gofile.outputs.url }} ] && echo "🔗 [GoFile](${{ steps.gofile.outputs.url }})" >> release.txt
         echo "status=success" >> $GITHUB_OUTPUT
 
     - name: Upload firmware to release
@@ -148,7 +142,7 @@ jobs:
         files: ${{ env.FIRMWARE }}/*
 
     - name: Delete workflow runs
-      uses: Mattraks/delete-workflow-runs@v0.0.3
+      uses: Mattraks/delete-workflow-runs@v0.0.2
       with:
         retain_days: 0
         keep_minimum_runs: 2
