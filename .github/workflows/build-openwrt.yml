@@ -24,7 +24,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Free disk space
+    - name: 释放磁盘空间
       uses: jlumbroso/free-disk-space@v1.0.1
       with:
         tool-cache: true
@@ -142,10 +142,12 @@ jobs:
         files: ${{ env.FIRMWARE }}/*
 
     - name: Delete workflow runs
-      uses: Mattraks/delete-workflow-runs@v0.0.2
+      uses: actions/delete-workflow-runs@v0.0.2
       with:
         retain_days: 0
         keep_minimum_runs: 2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Remove old Releases
       uses: dev-drprasad/delete-older-releases@v0.3.6
