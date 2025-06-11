@@ -33,9 +33,6 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@main
-
     - name: Free Disk Space (Ubuntu)
       uses: jlumbroso/free-disk-space@main
       with:
@@ -50,7 +47,10 @@ jobs:
         haskell: true
         large-packages: true
         docker-images: true
-        swap-storage: true   
+        swap-storage: true 
+        
+    - name: Checkout
+      uses: actions/checkout@main  
 
     - name: Initialization environment
       env:
@@ -151,7 +151,7 @@ jobs:
         echo "status=success" >> $GITHUB_OUTPUT
 
     - name: Upload firmware to release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       if: steps.tag.outputs.status == 'success' && !cancelled()
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
