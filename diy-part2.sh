@@ -21,3 +21,8 @@ sed -i 's/192.168.1.1/192.168.2.1/g' package/base-files/files/bin/config_generat
 # 2. 修改板级定义的默认网络设置（针对新版源码的关键步骤）
 # 这一步会替换 board.d 文件夹下可能存在的硬编码 IP
 find package/base-files/files/etc/board.d/ -type f -exec sed -i 's/192.168.1.1/192.168.2.1/g' {} +
+
+# 修正 automount 的 Makefile 依赖，解决某些平台下的编译冲突
+if [ -f package/lean/automount/Makefile ]; then
+    sed -i 's/+!TARGET_ramips:kmod-usb-storage-uas //g' package/lean/automount/Makefile
+fi
