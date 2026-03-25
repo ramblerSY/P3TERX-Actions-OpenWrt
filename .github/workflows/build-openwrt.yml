@@ -31,17 +31,15 @@ env:
 jobs:
   build:
     runs-on: ubuntu-22.04
+    # 增加权限声明，确保能够顺利创建 Release 和上传文件
+    permissions:
+      contents: write
 
     steps:
     - name: Free Disk Space (Ubuntu)
       uses: jlumbroso/free-disk-space@main
       with:
-        # this might remove tools that are actually needed,
-        # if set to "true" but frees about 6 GB
         tool-cache: false
-        
-        # all of these default to true, but feel free to set to
-        # "false" if necessary for your workflow
         android: true
         dotnet: true
         haskell: true
@@ -72,6 +70,7 @@ jobs:
         df -hT $PWD
         git clone $REPO_URL -b $REPO_BRANCH openwrt
         cd openwrt
+        # 回退到旧内核版本 (5.4) 以适配 K3
         git reset --hard 6dae534e4590ec034ca7be07541496bc645d43fb^
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
@@ -83,10 +82,17 @@ jobs:
         $GITHUB_WORKSPACE/$DIY_P1_SH
 
     - name: Update feeds
-      run: cd openwrt && ./scripts/feeds update -a
+      run: |
+        cd openwrt
+        # 增加清理步骤，确保 feeds 索引从零开始扫描
+        ./scripts/feeds clean
+        ./scripts/feeds update -a
 
     - name: Install feeds
-      run: cd openwrt && ./scripts/feeds install -a
+      run: |
+        cd openwrt
+        # 使用 -f 强制覆盖，确保 kenzo/small 等第三方库的同名插件能覆盖主仓库版本
+        ./scripts/feeds install -a -f
 
     - name: Load custom configuration
       run: |
@@ -149,7 +155,8 @@ jobs:
       run: |
         echo "release_tag=$(date +"%Y.%m.%d-%H%M")" >> $GITHUB_OUTPUT
         echo "斐讯 K3 稳定版固件 - 内核 5.4.x" >> release.txt
-        echo "默认IP: 192.168.2.1 (请在diy-part2确认)" >> release.txt
+        echo "默认IP: 192.168.2.1" >> release.txt
+        echo "集成 Kenzo/Small 最新版插件库" >> release.txt
         echo "status=success" >> $GITHUB_OUTPUT
 
     - name: Upload firmware to release
