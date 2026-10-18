@@ -29,3 +29,6 @@ fi
 
 # 4. 如果有 K3 屏幕插件，也尝试修正其显示的默认 IP (可选)
 find package/ -type f -name "*k3screenctrl*" | xargs sed -i 's/192.168.1.1/192.168.2.1/g' 2>/dev/null || true
+
+# 5. 解决第三方 feeds 中 ffmpeg-full 架构声明缺失导致的编译中断错误
+rm -rf feeds/packages/multimedia/ffmpeg
