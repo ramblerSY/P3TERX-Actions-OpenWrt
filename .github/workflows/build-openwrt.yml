@@ -71,7 +71,7 @@ jobs:
         git clone $REPO_URL -b $REPO_BRANCH openwrt
         cd openwrt
         # 回退到旧内核版本 (5.4) 以适配 K3
-        # git reset --hard 6dae534e4590ec034ca7be07541496bc645d43fb^
+        git reset --hard 6dae534e4590ec034ca7be07541496bc645d43fb^
         ln -sf /workdir/openwrt $GITHUB_WORKSPACE/openwrt
 
     - name: Load custom feeds
