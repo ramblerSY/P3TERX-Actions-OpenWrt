@@ -33,7 +33,8 @@ find package/ -type f -name "*k3screenctrl*" | xargs sed -i 's/192.168.1.1/192.1
 # 5. 解决第三方 feeds 中 ffmpeg-full 架构声明缺失导致的编译中断错误
 rm -rf feeds/packages/multimedia/ffmpeg
 
-# 6. 彻底解决 vsftpd 与 vsftpd-alt 文件路径冲突问题
+# 6. 彻底铲除 vsftpd-alt，防止文件冲突和残留
 rm -rf feeds/packages/net/vsftpd-alt
-# 或者直接在配置文件中强制关闭冲突项：
-sed -i 's/CONFIG_PACKAGE_vsftpd-alt=y/# CONFIG_PACKAGE_vsftpd-alt is not set/g' .config
+rm -rf package/feeds/packages/vsftpd-alt
+sed -i '/CONFIG_PACKAGE_vsftpd-alt/d' .config
+echo "CONFIG_PACKAGE_vsftpd-alt is not set" >> .config
