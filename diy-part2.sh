@@ -36,5 +36,7 @@ rm -rf feeds/packages/multimedia/ffmpeg
 # 6. 彻底铲除 vsftpd-alt，防止文件冲突和残留
 rm -rf feeds/packages/net/vsftpd-alt
 rm -rf package/feeds/packages/vsftpd-alt
+
+# 7. 确保在 .config 中正确禁用 vsftpd-alt（必须带 # 号）
 sed -i '/CONFIG_PACKAGE_vsftpd-alt/d' .config
-echo "CONFIG_PACKAGE_vsftpd-alt is not set" >> .config
+echo "# CONFIG_PACKAGE_vsftpd-alt is not set" >> .config
